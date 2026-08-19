@@ -1,7 +1,5 @@
-namespace Terminal_Clone;
-
 class Program
-{
+
     static void Main(string[] args)
     {
         LineManager lineManager = new LineManager();
