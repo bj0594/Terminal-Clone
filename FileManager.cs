@@ -2,14 +2,17 @@ using System.IO;
 
 public static class Commands
 {
-    // Creates a new empty file using the filename provided by the user.
+    // Creates a new empty file.
     public static void Touch(string[] parts)
     {
         // Get the filename from the command arguments.
         string filename = parts[1];
 
-        // Create the file and immediately close it.
-        File.Create(filename).Dispose();
+        // Only create the file if it does not already exist.
+        if (!File.Exists(filename))
+        {
+            File.Create(filename).Dispose();
+        }
     }
 
 
@@ -56,20 +59,20 @@ public static class Commands
             );
         }
 
-        // Move the file when the command is "mv".
+        // Move the file when requested.
         if (move)
         {
             File.Move(source, destination);
         }
         else
         {
-            // Copy the file when the command is "cp".
+            // Otherwise, copy the file.
             File.Copy(source, destination);
         }
     }
 
 
-    // Deletes a file from the specified path.
+    // Deletes a file.
     public static void Remove(string[] parts)
     {
         // Get the filename from the command arguments.
@@ -80,39 +83,55 @@ public static class Commands
     }
 
 
-    // Displays a PowerShell-style error when an unknown command is entered.
-    public static void ShowCommandNotFoundError(string command)
+    // Displays an error when a command has incorrect arguments.
+    public static void ShowArgumentError(string command)
     {
-        // Use red text to make the error visually distinct.
         Console.ForegroundColor = ConsoleColor.Red;
 
-        // Display the command that could not be found.
+        Console.WriteLine(
+            $"Incorrect usage of '{command}'."
+        );
+
+        Console.ResetColor();
+    }
+
+
+    // Displays an error when a file operation fails.
+    public static void ShowFileError()
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+
+        Console.WriteLine(
+            "The file operation could not be completed."
+        );
+
+        Console.ResetColor();
+    }
+
+
+    // Displays a PowerShell-style error for an unknown command.
+    public static void ShowCommandNotFoundError(string command)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+
         Console.WriteLine(
             $"{command} : The term '{command}' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again."
         );
 
-        // Reproduce the structure of a PowerShell error message.
         Console.WriteLine("At line:1 char:1");
-
-        // Show the command that caused the error.
         Console.WriteLine($"+ {command}");
-
-        // Underline the command with tildes.
         Console.WriteLine(
             $"+ {new string('~', command.Length)}"
         );
 
-        // Display information about the type of error.
         Console.WriteLine(
             $"    + CategoryInfo          : ObjectNotFound: ({command}:String) [], CommandNotFoundException"
         );
 
-        // Display the error identifier.
         Console.WriteLine(
             "    + FullyQualifiedErrorId : CommandNotFoundException"
         );
 
-        // Restore the normal console text color.
         Console.ResetColor();
     }
 }

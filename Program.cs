@@ -3,10 +3,8 @@ string currentDirectory = Directory.GetCurrentDirectory();
 
 while (true)
 {
-    // Display a PowerShell-style prompt showing the current directory.
-    Console.Write(
-        $"PS {currentDirectory}> "
-    );
+    // Display the current directory as a PowerShell-style prompt.
+    Console.Write($"PS {currentDirectory}> ");
 
     // Read the command entered by the user.
     string input = Console.ReadLine() ?? "";
@@ -23,26 +21,72 @@ while (true)
         StringSplitOptions.RemoveEmptyEntries
     );
 
-    switch (parts[0])
+    try
     {
-        case "touch":
-            Commands.Touch(parts);
-            break;
+        switch (parts[0])
+        {
+            case "touch":
 
-        case "cp":
-            Commands.Copy(parts);
-            break;
+                // Check that a filename was provided.
+                if (parts.Length != 2)
+                {
+                    Commands.ShowArgumentError("touch");
+                    break;
+                }
 
-        case "mv":
-            Commands.Move(parts);
-            break;
+                Commands.Touch(parts);
+                break;
 
-        case "rm":
-            Commands.Remove(parts);
-            break;
 
-        default:
-            Commands.ShowCommandNotFoundError(parts[0]);
-            break;
+            case "cp":
+
+                // Check that a source and destination were provided.
+                if (parts.Length != 3)
+                {
+                    Commands.ShowArgumentError("cp");
+                    break;
+                }
+
+                Commands.Copy(parts);
+                break;
+
+
+            case "mv":
+
+                // Check that a source and destination were provided.
+                if (parts.Length != 3)
+                {
+                    Commands.ShowArgumentError("mv");
+                    break;
+                }
+
+                Commands.Move(parts);
+                break;
+
+
+            case "rm":
+
+                // Check that a filename was provided.
+                if (parts.Length != 2)
+                {
+                    Commands.ShowArgumentError("rm");
+                    break;
+                }
+
+                Commands.Remove(parts);
+                break;
+
+
+            default:
+
+                // Display an error for an unknown command.
+                Commands.ShowCommandNotFoundError(parts[0]);
+                break;
+        }
+    }
+    catch (Exception)
+    {
+        // Display a simple error without stopping the program.
+        Commands.ShowFileError();
     }
 }
