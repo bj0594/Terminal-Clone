@@ -11,7 +11,7 @@ static class Cat
 {
     if (args.Length < 2)
     {
-        Console.WriteLine("cat: mangler filnavn");
+        Console.WriteLine("cat: filename missing");
         return;
     }
 
@@ -21,19 +21,19 @@ static class Cat
     }
     catch (FileNotFoundException)
     {
-        Console.WriteLine($"cat: {args[1]}: filen finnes ikke");
+        Console.WriteLine($"cat: {args[1]}: file not found");
     }
     catch (DirectoryNotFoundException)
     {
-        Console.WriteLine($"cat: {args[1]}: mappen finnes ikke");
+        Console.WriteLine($"cat: {args[1]}: folder not found");
     }
     catch (UnauthorizedAccessException)
     {
-        Console.WriteLine($"cat: {args[1]}: ingen tilgang");
+        Console.WriteLine($"cat: {args[1]}: no access");
     }
     catch (Exception e)
     {
-        Console.WriteLine($"cat: en feil oppstod: {e.Message}");
+        Console.WriteLine($"cat: an error occured: {e.Message}");
     }
 }
 }
