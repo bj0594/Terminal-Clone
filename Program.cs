@@ -8,13 +8,15 @@ class Program
         {
             Console.Write("> ");
             string? input = Console.ReadLine();
-            string[] parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            string command = parts[0].ToLower();
 
             if (string.IsNullOrWhiteSpace(input))
             {
                 continue;
             }
+
+            string[] parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            string command = parts[0].ToLower();
+
 
             switch (command)
             {
