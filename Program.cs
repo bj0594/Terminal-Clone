@@ -1,4 +1,7 @@
-class Program
+namespace Terminal_Clone;
+
+public class Program
+{
 
     static void Main(string[] args)
     {
@@ -30,94 +33,94 @@ class Program
                 {
                     // LineManager
                     case "head":
-                    {
-                        if (TryGetLineArguments(
-                            parts,
-                            out string filePath,
-                            out int numberOfLines))
                         {
-                            lineManager.Head(filePath, numberOfLines);
-                        }
+                            if (TryGetLineArguments(
+                                parts,
+                                out string filePath,
+                                out int numberOfLines))
+                            {
+                                lineManager.Head(filePath, numberOfLines);
+                            }
 
-                        break;
-                    }
-
-                    case "tail":
-                    {
-                        if (TryGetLineArguments(
-                            parts,
-                            out string filePath,
-                            out int numberOfLines))
-                        {
-                            lineManager.Tail(filePath, numberOfLines);
-                        }
-
-                        break;
-                    }
-
-                    case "wc":
-                    {
-                        if (parts.Length != 2)
-                        {
-                            Console.WriteLine("Usage: wc <file>");
                             break;
                         }
 
-                        string filePath = parts[1];
+                    case "tail":
+                        {
+                            if (TryGetLineArguments(
+                                parts,
+                                out string filePath,
+                                out int numberOfLines))
+                            {
+                                lineManager.Tail(filePath, numberOfLines);
+                            }
 
-                        lineManager.Wc(filePath);
-                        break;
-                    }
+                            break;
+                        }
+
+                    case "wc":
+                        {
+                            if (parts.Length != 2)
+                            {
+                                Console.WriteLine("Usage: wc <file>");
+                                break;
+                            }
+
+                            string filePath = parts[1];
+
+                            lineManager.Wc(filePath);
+                            break;
+                        }
 
 
                     // FileManager
                     case "touch":
-                    {
-                        if (parts.Length != 2)
                         {
-                            Commands.ShowArgumentError("touch");
+                            if (parts.Length != 2)
+                            {
+                                Commands.ShowArgumentError("touch");
+                                break;
+                            }
+
+                            Commands.Touch(parts);
                             break;
                         }
-
-                        Commands.Touch(parts);
-                        break;
-                    }
 
                     case "cp":
-                    {
-                        if (parts.Length != 3)
                         {
-                            Commands.ShowArgumentError("cp");
+                            if (parts.Length != 3)
+                            {
+                                Commands.ShowArgumentError("cp");
+                                break;
+                            }
+
+                            Commands.Copy(parts);
                             break;
                         }
-
-                        Commands.Copy(parts);
-                        break;
-                    }
 
                     case "mv":
-                    {
-                        if (parts.Length != 3)
                         {
-                            Commands.ShowArgumentError("mv");
+                            if (parts.Length != 3)
+                            {
+                                Commands.ShowArgumentError("mv");
+                                break;
+                            }
+
+                            Commands.Move(parts);
                             break;
                         }
-
-                        Commands.Move(parts);
-                        break;
-                    }
 
                     case "rm":
-                    {
-                        if (parts.Length != 2)
                         {
-                            Commands.ShowArgumentError("rm");
+                            if (parts.Length != 2)
+                            {
+                                Commands.ShowArgumentError("rm");
+                                break;
+                            }
+
+                            Commands.Remove(parts);
                             break;
                         }
-
-                        Commands.Remove(parts);
-                        break;
-                    }
 
 
                     // InfoManager
