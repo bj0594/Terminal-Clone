@@ -35,7 +35,7 @@ class Program
                     {
                         if (TryGetLineArguments(parts, out string filePath, out int numberOfLines))
                         {
-                            lineManager.Head(filePath, numberOfLines);
+                            lineManager.Tail(filePath, numberOfLines);
                         }
                         break;
                     }

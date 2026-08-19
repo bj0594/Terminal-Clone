@@ -2,7 +2,7 @@ namespace Terminal_Clone;
 
 public class LineManager
 {
-    public void Head(string filePath, int numberOfLines = 6)
+    public void Head(string filePath, int numberOfLines = 10)
     {
         if (!File.Exists(filePath))
         {
@@ -22,7 +22,7 @@ public class LineManager
             }
         }
     }
-    public void Tail(string filePath, int numberOfLines = 6)
+    public void Tail(string filePath, int numberOfLines = 10)
     {
         if (!File.Exists(filePath))
         {
