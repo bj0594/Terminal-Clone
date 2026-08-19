@@ -4,6 +4,8 @@ class Program
 {
     static void Main(string[] args)
     {
+        LineManager lineManager = new LineManager();
+
         while (true)
         {
             Console.Write("> ");
@@ -21,16 +23,35 @@ class Program
             switch (command)
             {
                 case "head":
-                    Console.WriteLine("Head command");
-                    break;
+                    {
+                        if (parts.Length < 2)
+                        {
+                            Console.WriteLine("Usage: head <file>");
+                            break;
+                        }
+                        string filePath = parts[1];
+
+                        lineManager.Head(filePath);
+                        break;
+                    }
 
                 case "tail":
-                    Console.WriteLine("Tail command");
-                    break;
+                    {
+                        if (parts.Length < 2)
+                        {
+                            Console.WriteLine("Usage: tail <file>");
+                            break;
+                        }
+                        string filePath = parts[1];
+                        lineManager.Tail(filePath);
+                        break;
+                    }
 
                 case "wc":
-                    Console.WriteLine("Wc command");
-                    break;
+                    {
+                        Console.WriteLine("Wc command");
+                        break;
+                    }
 
                 case "exit":
                     return;
