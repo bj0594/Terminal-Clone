@@ -45,6 +45,27 @@ public class LineManager
             Console.WriteLine("File not found...");
             return;
         }
+        //  Count all characters
         string text = File.ReadAllText(filePath);
+        int charactersCount = text.Length;
+
+        // Count all lines
+        string[] lines = File.ReadAllLines(filePath);
+        int lineCount = lines.Length;
+
+        // Count all words
+        string[] words = text.Split(
+            new[] { ' ', '\n', '\r', '\t' },
+            StringSplitOptions.RemoveEmptyEntries
+        );
+        int wordCount = words.Length;
+
+        // Count file bytes
+        long byteCount = new FileInfo(filePath).Length;
+
+        Console.WriteLine($"Lines: {lineCount}");
+        Console.WriteLine($"Words: {wordCount}");
+        Console.WriteLine($"Characters: {charactersCount}");
+        Console.WriteLine($"Bytes: {byteCount}");
     }
 }

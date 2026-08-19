@@ -49,7 +49,14 @@ class Program
 
                 case "wc":
                     {
-                        Console.WriteLine("Wc command");
+                        if (parts.Length < 2)
+                        {
+                            Console.WriteLine("Usage: wc <file>");
+                            break;
+                        }
+                        string filePath = parts[1];
+
+                        lineManager.Wc(filePath);
                         break;
                     }
 
