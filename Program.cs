@@ -1,107 +1,198 @@
-if (args.Length == 0)
-{
-    Console.WriteLine("Ingen kommando gitt");
-    return;
-}
+class Program
 
-switch (args[0])
-{
-    case "echo": Echo.Run(args); break;
-    case "cat":  Cat.Run(args);  break;
-    case "ls":   Ls.Run(args);   break;
-
-    default:
-        Console.WriteLine($"Ukjent kommando: {args[0]}");
-        break;
-﻿// Get the directory where the program is currently running.
-string currentDirectory = Directory.GetCurrentDirectory();
-
-while (true)
-{
-    // Display the current directory as a PowerShell-style prompt.
-    Console.Write($"PS {currentDirectory}> ");
-
-    // Read the command entered by the user.
-    string input = Console.ReadLine() ?? "";
-
-    // Ignore empty input and return to the prompt.
-    if (string.IsNullOrWhiteSpace(input))
+    static void Main(string[] args)
     {
-        continue;
-    }
+        LineManager lineManager = new LineManager();
 
-    // Split the input into the command and its arguments.
-    string[] parts = input.Split(
-        ' ',
-        StringSplitOptions.RemoveEmptyEntries
-    );
+        string currentDirectory = Directory.GetCurrentDirectory();
 
-    try
-    {
-        switch (parts[0])
+        while (true)
         {
-            case "touch":
+            Console.Write($"PS {currentDirectory}> ");
 
-                // Check that a filename was provided.
-                if (parts.Length != 2)
+            string input = Console.ReadLine() ?? "";
+
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                continue;
+            }
+
+            string[] parts = input.Split(
+                ' ',
+                StringSplitOptions.RemoveEmptyEntries
+            );
+
+            string command = parts[0].ToLower();
+
+            try
+            {
+                switch (command)
                 {
-                    Commands.ShowArgumentError("touch");
-                    break;
+                    // LineManager
+                    case "head":
+                    {
+                        if (TryGetLineArguments(
+                            parts,
+                            out string filePath,
+                            out int numberOfLines))
+                        {
+                            lineManager.Head(filePath, numberOfLines);
+                        }
+
+                        break;
+                    }
+
+                    case "tail":
+                    {
+                        if (TryGetLineArguments(
+                            parts,
+                            out string filePath,
+                            out int numberOfLines))
+                        {
+                            lineManager.Tail(filePath, numberOfLines);
+                        }
+
+                        break;
+                    }
+
+                    case "wc":
+                    {
+                        if (parts.Length != 2)
+                        {
+                            Console.WriteLine("Usage: wc <file>");
+                            break;
+                        }
+
+                        string filePath = parts[1];
+
+                        lineManager.Wc(filePath);
+                        break;
+                    }
+
+
+                    // FileManager
+                    case "touch":
+                    {
+                        if (parts.Length != 2)
+                        {
+                            Commands.ShowArgumentError("touch");
+                            break;
+                        }
+
+                        Commands.Touch(parts);
+                        break;
+                    }
+
+                    case "cp":
+                    {
+                        if (parts.Length != 3)
+                        {
+                            Commands.ShowArgumentError("cp");
+                            break;
+                        }
+
+                        Commands.Copy(parts);
+                        break;
+                    }
+
+                    case "mv":
+                    {
+                        if (parts.Length != 3)
+                        {
+                            Commands.ShowArgumentError("mv");
+                            break;
+                        }
+
+                        Commands.Move(parts);
+                        break;
+                    }
+
+                    case "rm":
+                    {
+                        if (parts.Length != 2)
+                        {
+                            Commands.ShowArgumentError("rm");
+                            break;
+                        }
+
+                        Commands.Remove(parts);
+                        break;
+                    }
+
+
+                    // InfoManager
+                    case "echo":
+                        Echo.Run(parts);
+                        break;
+
+                    case "cat":
+                        Cat.Run(parts);
+                        break;
+
+                    case "ls":
+                        Ls.Run(parts);
+                        break;
+
+
+                    // Program commands
+                    case "exit":
+                        return;
+
+                    default:
+                        Commands.ShowCommandNotFoundError(command);
+                        break;
                 }
-
-                Commands.Touch(parts);
-                break;
-
-
-            case "cp":
-
-                // Check that a source and destination were provided.
-                if (parts.Length != 3)
-                {
-                    Commands.ShowArgumentError("cp");
-                    break;
-                }
-
-                Commands.Copy(parts);
-                break;
-
-
-            case "mv":
-
-                // Check that a source and destination were provided.
-                if (parts.Length != 3)
-                {
-                    Commands.ShowArgumentError("mv");
-                    break;
-                }
-
-                Commands.Move(parts);
-                break;
-
-
-            case "rm":
-
-                // Check that a filename was provided.
-                if (parts.Length != 2)
-                {
-                    Commands.ShowArgumentError("rm");
-                    break;
-                }
-
-                Commands.Remove(parts);
-                break;
-
-
-            default:
-
-                // Display an error for an unknown command.
-                Commands.ShowCommandNotFoundError(parts[0]);
-                break;
+            }
+            catch (Exception)
+            {
+                Commands.ShowFileError();
+            }
         }
     }
-    catch (Exception)
+
+
+    static bool TryGetLineArguments(
+        string[] parts,
+        out string filePath,
+        out int numberOfLines)
     {
-        // Display a simple error without stopping the program.
-        Commands.ShowFileError();
+        filePath = "";
+        numberOfLines = 10;
+
+        if (parts.Length == 2)
+        {
+            filePath = parts[1];
+            return true;
+        }
+
+        if (parts.Length == 4 && parts[1] == "-n")
+        {
+            if (!int.TryParse(parts[2], out numberOfLines))
+            {
+                Console.WriteLine(
+                    "Number of lines must be a valid number."
+                );
+
+                return false;
+            }
+
+            if (numberOfLines <= 0)
+            {
+                Console.WriteLine(
+                    "Number of lines must be greater than 0."
+                );
+
+                return false;
+            }
+
+            filePath = parts[3];
+            return true;
+        }
+
+        Console.WriteLine(
+            "Usage: <command> <file> or <command> -n <number> <file>"
+        );
+
+        return false;
     }
 }
