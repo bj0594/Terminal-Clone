@@ -26,12 +26,37 @@ class Program
                     {
                         if (parts.Length < 2)
                         {
-                            Console.WriteLine("Usage: head <file>");
+                            Console.WriteLine("Usage: head <file> or head -n <number> <file>");
                             break;
                         }
-                        string filePath = parts[1];
+                        if (parts[1] == "-n")
+                        {
+                            if (parts.Length < 4)
+                            {
+                                Console.WriteLine("Usage: head -n <number> <file>");
+                                break;
+                            }
 
-                        lineManager.Head(filePath);
+                            if (!int.TryParse(parts[2], out int numberOfLines))
+                            {
+                                Console.WriteLine("Number of lines must be a valid number.");
+                                break;
+                            }
+
+                            if (numberOfLines <= 0)
+                            {
+                                Console.WriteLine("Number of lines must be greater then 0.");
+                                break;
+                            }
+                            string filePath = parts[3];
+                            lineManager.Head(filePath, numberOfLines);
+                        }
+                        else
+                        {
+                            string filePath = parts[1];
+
+                            lineManager.Head(filePath);
+                        }
                         break;
                     }
 
@@ -42,8 +67,33 @@ class Program
                             Console.WriteLine("Usage: tail <file>");
                             break;
                         }
-                        string filePath = parts[1];
-                        lineManager.Tail(filePath);
+                        if (parts[1] == "-n")
+                        {
+                            if (parts.Length < 4)
+                            {
+                                Console.WriteLine("Usage: tail -n <number> <file>");
+                                break;
+                            }
+
+                            if (!int.TryParse(parts[2], out int numberOfLines))
+                            {
+                                Console.WriteLine("Number of lines must be a valid number.");
+                                break;
+                            }
+
+                            if (numberOfLines <= 0)
+                            {
+                                Console.WriteLine("Number of lines must be greater then 0.");
+                                break;
+                            }
+                            string filePath = parts[3];
+                            lineManager.Tail(filePath, numberOfLines);
+                        }
+                        else
+                        {
+                            string filePath = parts[1];
+                            lineManager.Tail(filePath);
+                        }
                         break;
                     }
 
