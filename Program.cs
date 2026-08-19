@@ -24,75 +24,18 @@ class Program
             {
                 case "head":
                     {
-                        if (parts.Length < 2)
+                        if (TryGetLineArguments(parts, out string filePath, out int numberOfLines))
                         {
-                            Console.WriteLine("Usage: head <file> or head -n <number> <file>");
-                            break;
-                        }
-                        if (parts[1] == "-n")
-                        {
-                            if (parts.Length < 4)
-                            {
-                                Console.WriteLine("Usage: head -n <number> <file>");
-                                break;
-                            }
-
-                            if (!int.TryParse(parts[2], out int numberOfLines))
-                            {
-                                Console.WriteLine("Number of lines must be a valid number.");
-                                break;
-                            }
-
-                            if (numberOfLines <= 0)
-                            {
-                                Console.WriteLine("Number of lines must be greater then 0.");
-                                break;
-                            }
-                            string filePath = parts[3];
                             lineManager.Head(filePath, numberOfLines);
-                        }
-                        else
-                        {
-                            string filePath = parts[1];
-
-                            lineManager.Head(filePath);
                         }
                         break;
                     }
 
                 case "tail":
                     {
-                        if (parts.Length < 2)
+                        if (TryGetLineArguments(parts, out string filePath, out int numberOfLines))
                         {
-                            Console.WriteLine("Usage: tail <file>");
-                            break;
-                        }
-                        if (parts[1] == "-n")
-                        {
-                            if (parts.Length < 4)
-                            {
-                                Console.WriteLine("Usage: tail -n <number> <file>");
-                                break;
-                            }
-
-                            if (!int.TryParse(parts[2], out int numberOfLines))
-                            {
-                                Console.WriteLine("Number of lines must be a valid number.");
-                                break;
-                            }
-
-                            if (numberOfLines <= 0)
-                            {
-                                Console.WriteLine("Number of lines must be greater then 0.");
-                                break;
-                            }
-                            string filePath = parts[3];
-                            lineManager.Tail(filePath, numberOfLines);
-                        }
-                        else
-                        {
-                            string filePath = parts[1];
-                            lineManager.Tail(filePath);
+                            lineManager.Head(filePath, numberOfLines);
                         }
                         break;
                     }
@@ -118,5 +61,36 @@ class Program
                     break;
             }
         }
+    }
+    static bool TryGetLineArguments(string[] parts, out string filePath, out int numberOfLines)
+    {
+        filePath = "";
+        numberOfLines = 10;
+
+        if (parts.Length == 2)
+        {
+            filePath = parts[1];
+            return true;
+        }
+
+        if (parts.Length == 4 && parts[1] == "-n")
+        {
+            if (!int.TryParse(parts[2], out numberOfLines))
+            {
+                Console.WriteLine("Number of lines must be valid number.");
+                return false;
+            }
+
+            if (numberOfLines <= 0)
+            {
+                Console.WriteLine("Number of lines must be greater then 0.");
+                return false;
+            }
+
+            filePath = parts[3];
+            return true;
+        }
+        Console.WriteLine("Usage: <command> <file> or <command> -n <number> <file>");
+        return false;
     }
 }
