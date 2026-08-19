@@ -42,7 +42,7 @@ class Program
 
                 case "wc":
                     {
-                        if (parts.Length < 2)
+                        if (parts.Length != 2)
                         {
                             Console.WriteLine("Usage: wc <file>");
                             break;
@@ -83,7 +83,7 @@ class Program
 
             if (numberOfLines <= 0)
             {
-                Console.WriteLine("Number of lines must be greater then 0.");
+                Console.WriteLine("Number of lines must be a greater than 0.");
                 return false;
             }
 
