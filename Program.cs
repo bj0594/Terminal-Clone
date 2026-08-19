@@ -8,17 +8,35 @@ class Program
         {
             Console.Write("> ");
             string? input = Console.ReadLine();
+            string[] parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            string command = parts[0].ToLower();
 
             if (string.IsNullOrWhiteSpace(input))
             {
                 continue;
             }
 
-            if (input.ToLower() == "exit")
+            switch (command)
             {
-                break;
+                case "head":
+                    Console.WriteLine("Head command");
+                    break;
+
+                case "tail":
+                    Console.WriteLine("Tail command");
+                    break;
+
+                case "wc":
+                    Console.WriteLine("Wc command");
+                    break;
+
+                case "exit":
+                    return;
+
+                default:
+                    Console.WriteLine("Unknown command");
+                    break;
             }
-            Console.WriteLine($"You entered: {input}");
         }
     }
 }
